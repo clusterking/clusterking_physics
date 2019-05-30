@@ -3,7 +3,7 @@ Physics distributions for the ClusterKinG package
 
 |Pypi status| |Chat| |License| |Black|
 
-.. |Pypi Status| image:: https://badge.fury.io/py/clusterking.svg
+.. |Pypi Status| image:: https://badge.fury.io/py/clusterking_physics.svg
    :target: https://pypi.org/project/clusterking_physics/
    :alt: Pypi
 
