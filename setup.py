@@ -23,6 +23,7 @@ keywords = [
     "hep-ex",
     "hep-ph",
     "wilson",
+    "clusterking"
 ]
 
 description = (
@@ -36,7 +37,7 @@ packages = setuptools.find_packages()
 with (this_dir / "README.rst").open() as fh:
     long_description = fh.read()
 
-with (this_dir / "clusterking" / "physics" / "version.txt").open() as vf:
+with (this_dir / "clusterking_physics" / "version.txt").open() as vf:
     version = vf.read()
 
 with (this_dir / "requirements.txt").open() as rf:
@@ -48,16 +49,16 @@ with (this_dir / "requirements.txt").open() as rf:
 
 
 setup(
-    name="clusterking.physics",
+    name="clusterking_physics",
     version=version,
     packages=packages,
     install_requires=install_requires,
-    url="https://github.com/clusterking/physics",
+    url="https://github.com/clusterking/clusterking_physics",
     project_urls={
-        "Bug Tracker": "https://github.com/clusterking/physics/issues",
-        "Source Code": "https://github.com/clusterking/physics/",
+        "Bug Tracker": "https://github.com/clusterking/clusterking_physics/issues",
+        "Source Code": "https://github.com/clusterking/clusterking_physics/",
     },
-    package_data={"clusterking": ["version.txt"]},
+    package_data={"clusterking_physics": ["version.txt"]},
     license="MIT",
     keywords=keywords,
     description=description,
@@ -71,9 +72,3 @@ setup(
     ],
 )
 
-#
-# # Can only do this after installation of course
-# todo: can actually do that with setup_requires
-# print("Will this really be run in the end?")
-# import clusterking.util.metadata
-# clusterking.util.metadata.save_git_info()
