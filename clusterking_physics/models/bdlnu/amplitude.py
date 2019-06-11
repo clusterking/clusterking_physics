@@ -7,8 +7,8 @@ import numpy as np
 from wilson import Wilson
 
 # ours
-from clusterking_physics.models.bdlnu.form_factors import fplus, fzero, fT
-from clusterking_physics.models.bdlnu.inputs import inputs
+from form_factors import fplus, fzero, fT
+from inputs import inputs
 
 # todo: make pycharm ignore name convention pylinting in this file
 
