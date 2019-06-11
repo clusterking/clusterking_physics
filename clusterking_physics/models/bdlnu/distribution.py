@@ -5,7 +5,7 @@ import scipy.integrate as integrate
 from numpy import sqrt, pi, cos
 
 # ours
-from clusterking.physics.models.bdlnu.amplitude import *
+from clusterking_physics.models.bdlnu.amplitude import *
 
 # todo: make pycharm ignore name convention pylinting in this file
 
