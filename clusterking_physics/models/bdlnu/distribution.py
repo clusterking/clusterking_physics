@@ -4,6 +4,9 @@
 import scipy.integrate as integrate
 from numpy import sqrt, pi, cos
 
+# 3rd
+from wilson.run.smeft.smpar import p
+
 # ours
 from clusterking_physics.models.bdlnu.amplitude import *
 
@@ -359,11 +362,23 @@ def dGq2cthetal(w: Wilson, q2, cthetal):
 
 
 def dGcthetal(w: Wilson, cthetal):
-    """1D  cthetal distrubution, integrate q2"""
+    """1D cthetal distribution, integrate q2"""
 
     return integrate.quad(lambda q2: dGq2cthetal(w, q2, cthetal), q2min, q2max)[
         0
     ]
+
+
+def dGcthetal_vs_tanbm(tanbm, cthetal):
+    """ 1D cthetal distribution vs tan(beta)/mH for investigating 2HDMs """
+    v = sqrt(1 / (sqrt(2) * p['GF']))
+    Yb = 4.2 / v
+    Ytau = 1.776 / v
+    w = Wilson(
+        wcdict={"CSR_bctaunutau": -sqrt(2)*Yb*Ytau / 4 / p['GF'] * tanbm**2},
+        scale=5, eft='WET', basis='flavio'
+    )
+    return dGcthetal(w, cthetal)
 
 
 def dGcthetalnorm(w: Wilson, cthetal):
