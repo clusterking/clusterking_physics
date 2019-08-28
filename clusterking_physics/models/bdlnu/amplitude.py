@@ -10,7 +10,7 @@ from numba import jit
 
 # ours
 from clusterking_physics.models.bdlnu.form_factors import fplus, fzero, fT
-from clusterking_physics.models.bdlnu.inputs import inputs
+from clusterking_physics.models.bdlnu.inputs import *
 
 # todo: make pycharm ignore name convention pylinting in this file
 
@@ -34,10 +34,6 @@ def Klambda(a, b, c):
 
 
 # Improves speed and allows us to compile more
-mB = inputs["mB"]
-mD = inputs["mD"]
-mtau = inputs["mtau"]
-
 
 @jit(nopython=True)
 def kvec(q2):
@@ -53,27 +49,27 @@ def kvec(q2):
 
 @cache(maxsize=1000)
 def cvl_bctaunutau(w):
-    return w.match_run(inputs["mb"], "WET", "flavio")["CVL_bctaunutau"]
+    return w.match_run(mb, "WET", "flavio")["CVL_bctaunutau"]
 
 
 @cache(maxsize=1000)
 def cvr_bctaunutau(w):
-    return w.match_run(inputs["mb"], "WET", "flavio")["CVR_bctaunutau"]
+    return w.match_run(mb, "WET", "flavio")["CVR_bctaunutau"]
 
 
 @cache(maxsize=1000)
 def csl_bctaunutau(w):
-    return w.match_run(inputs["mb"], "WET", "flavio")["CSL_bctaunutau"]
+    return w.match_run(mb, "WET", "flavio")["CSL_bctaunutau"]
 
 
 @cache(maxsize=1000)
 def csr_bctaunutau(w):
-    return w.match_run(inputs["mb"], "WET", "flavio")["CSR_bctaunutau"]
+    return w.match_run(mb, "WET", "flavio")["CSR_bctaunutau"]
 
 
 @cache(maxsize=1000)
 def ct_bctaunutau(w):
-    return w.match_run(inputs["mb"], "WET", "flavio")["CT_bctaunutau"]
+    return w.match_run(mb, "WET", "flavio")["CT_bctaunutau"]
 
 
 def H0(w: Wilson, q2, El):
@@ -111,7 +107,7 @@ def HS(w: Wilson, q2, El):
             + csl_bctaunutau(w)
         )
         * (mB ** 2 - mD ** 2)
-        / (inputs["mb"] - inputs["mc"])
+        / (mb - mc)
         * fzero(q2)
     )
 
