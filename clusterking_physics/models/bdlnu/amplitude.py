@@ -2,6 +2,7 @@
 
 # std
 import numpy as np
+from functools import lru_cache as cache
 
 # 3rd party
 from wilson import Wilson
@@ -30,6 +31,7 @@ def Klambda(a, b, c):
     return max(0, a ** 2 + b ** 2 + c ** 2 - 2 * (a * b + a * c + b * c))
 
 
+@cache(maxsize=1000)
 def kvec(q2):
     return (
         1
@@ -41,12 +43,37 @@ def kvec(q2):
 ##  23
 
 
+@cache(maxsize=1000)
+def cvl_bctaunutau(w):
+    return w.match_run(inputs["mb"], "WET", "flavio")["CVL_bctaunutau"]
+
+
+@cache(maxsize=1000)
+def cvr_bctaunutau(w):
+    return w.match_run(inputs["mb"], "WET", "flavio")["CVR_bctaunutau"]
+
+
+@cache(maxsize=1000)
+def csl_bctaunutau(w):
+    return w.match_run(inputs["mb"], "WET", "flavio")["CSL_bctaunutau"]
+
+
+@cache(maxsize=1000)
+def csr_bctaunutau(w):
+    return w.match_run(inputs["mb"], "WET", "flavio")["CSR_bctaunutau"]
+
+
+@cache(maxsize=1000)
+def ct_bctaunutau(w):
+    return w.match_run(inputs["mb"], "WET", "flavio")["CT_bctaunutau"]
+
+
 def H0(w: Wilson, q2, El):
     return (
         (
             1
-            + w.match_run(inputs["mb"], "WET", "flavio")["CVL_bctaunutau"]
-            + w.match_run(inputs["mb"], "WET", "flavio")["CVR_bctaunutau"]
+            + cvl_bctaunutau(w)
+            + cvr_bctaunutau(w)
         )
         * 2
         * inputs["mB"]
@@ -60,8 +87,8 @@ def Ht(w: Wilson, q2, El):
     return (
         (
             1
-            + w.match_run(inputs["mb"], "WET", "flavio")["CVL_bctaunutau"]
-            + w.match_run(inputs["mb"], "WET", "flavio")["CVR_bctaunutau"]
+            + cvl_bctaunutau(w)
+            + cvr_bctaunutau(w)
         )
         * (inputs["mB"] ** 2 - inputs["mD"] ** 2)
         / (np.sqrt(q2))
@@ -72,8 +99,8 @@ def Ht(w: Wilson, q2, El):
 def HS(w: Wilson, q2, El):
     return (
         (
-            w.match_run(inputs["mb"], "WET", "flavio")["CSR_bctaunutau"]
-            + w.match_run(inputs["mb"], "WET", "flavio")["CSL_bctaunutau"]
+            csr_bctaunutau(w)
+            + csl_bctaunutau(w)
         )
         * (inputs["mB"] ** 2 - inputs["mD"] ** 2)
         / (inputs["mb"] - inputs["mc"])
@@ -86,7 +113,7 @@ def HS(w: Wilson, q2, El):
 
 def Hpm(w: Wilson, q2, El):
     return (
-        w.match_run(inputs["mb"], "WET", "flavio")["CT_bctaunutau"]
+        ct_bctaunutau(w)
         * (2j * inputs["mB"] * kvec(q2))
         / (inputs["mB"] + inputs["mD"])
         * fT(q2)
@@ -98,7 +125,7 @@ def Hpm(w: Wilson, q2, El):
 
 def H0t(w: Wilson, q2, El):
     return (
-        w.match_run(inputs["mb"], "WET", "flavio")["CT_bctaunutau"]
+        ct_bctaunutau(w)
         * (2j * inputs["mB"] * kvec(q2))
         / (inputs["mB"] + inputs["mD"])
         * fT(q2)
