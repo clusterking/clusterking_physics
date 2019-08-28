@@ -281,7 +281,7 @@ def I0(w: Wilson, q2, El):
         return I0w2(w, q2, El)
 
     else:
-        print("El is outside of allowed range!")
+        raise ValueError("El is outside of allowed range!")
 
 
 def I1(w: Wilson, q2, El):
