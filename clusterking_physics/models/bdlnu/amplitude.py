@@ -6,6 +6,7 @@ from functools import lru_cache as cache
 
 # 3rd party
 from wilson import Wilson
+from numba import jit
 
 # ours
 from clusterking_physics.models.bdlnu.form_factors import fplus, fzero, fT
@@ -25,18 +26,25 @@ from clusterking_physics.models.bdlnu.inputs import inputs
 #  El  [     inputs['mtau']^2/(  2 * sqrt(q2) ),     sqrt(q2)/2   ] for  w1   and [  0,  inputs['mtau']^2/(2 sqrt(q2))  ]  for w2
 
 
+@jit(nopython=True)
 def Klambda(a, b, c):
     # even though the formula is positive definite, use max to enforce this
     # even when rounding errors occurr (else problems with sqrt later)
     return max(0, a ** 2 + b ** 2 + c ** 2 - 2 * (a * b + a * c + b * c))
 
 
-@cache(maxsize=1000)
+# Improves speed and allows us to compile more
+mB = inputs["mB"]
+mD = inputs["mD"]
+mtau = inputs["mtau"]
+
+
+@jit(nopython=True)
 def kvec(q2):
     return (
         1
-        / (2 * inputs["mB"])
-        * np.sqrt(Klambda(inputs["mB"] ** 2, inputs["mD"] ** 2, q2))
+        / (2 * mB)
+        * np.sqrt(Klambda(mB ** 2, mD ** 2, q2))
     )
 
 
@@ -76,7 +84,7 @@ def H0(w: Wilson, q2, El):
             + cvr_bctaunutau(w)
         )
         * 2
-        * inputs["mB"]
+        * mB
         * kvec(q2)
         / np.sqrt(q2)
         * fplus(q2)
@@ -90,7 +98,7 @@ def Ht(w: Wilson, q2, El):
             + cvl_bctaunutau(w)
             + cvr_bctaunutau(w)
         )
-        * (inputs["mB"] ** 2 - inputs["mD"] ** 2)
+        * (mB ** 2 - mD ** 2)
         / (np.sqrt(q2))
         * fzero(q2)
     )
@@ -102,7 +110,7 @@ def HS(w: Wilson, q2, El):
             csr_bctaunutau(w)
             + csl_bctaunutau(w)
         )
-        * (inputs["mB"] ** 2 - inputs["mD"] ** 2)
+        * (mB ** 2 - mD ** 2)
         / (inputs["mb"] - inputs["mc"])
         * fzero(q2)
     )
@@ -114,8 +122,8 @@ def HS(w: Wilson, q2, El):
 def Hpm(w: Wilson, q2, El):
     return (
         ct_bctaunutau(w)
-        * (2j * inputs["mB"] * kvec(q2))
-        / (inputs["mB"] + inputs["mD"])
+        * (2j * mB * kvec(q2))
+        / (mB + mD)
         * fT(q2)
     )
 
@@ -126,8 +134,8 @@ def Hpm(w: Wilson, q2, El):
 def H0t(w: Wilson, q2, El):
     return (
         ct_bctaunutau(w)
-        * (2j * inputs["mB"] * kvec(q2))
-        / (inputs["mB"] + inputs["mD"])
+        * (2j * mB * kvec(q2))
+        / (mB + mD)
         * fT(q2)
     )
 
@@ -140,10 +148,15 @@ def Icalzero(w: Wilson, q2, El):
     Hpmval = Hpm(w, q2, El)
     H0tval = H0t(w, q2, El)
 
+    return _Icalzero(q2, H0val, Hpmval, H0tval)
+
+
+@jit(nopython=True)
+def _Icalzero(q2, H0val, Hpmval, H0tval):
     return (
-        inputs["mtau"] * np.sqrt(q2) * np.absolute(H0val) ** 2
-        + 4 * inputs["mtau"] * np.sqrt(q2) * np.absolute(Hpmval + H0tval) ** 2
-        + 2j * inputs["mtau"] ** 2 * H0val * np.conjugate(Hpmval + H0tval)
+        mtau * np.sqrt(q2) * np.absolute(H0val) ** 2
+        + 4 * mtau * np.sqrt(q2) * np.absolute(Hpmval + H0tval) ** 2
+        + 2j * mtau ** 2 * H0val * np.conjugate(Hpmval + H0tval)
         - 2j * q2 * np.conjugate(H0val) * (Hpmval + H0tval)
     )
 
@@ -155,10 +168,16 @@ def IcalzeroI(w: Wilson, q2, El):
     HSval = HS(w, q2, El)
     Htval = Ht(w, q2, El)
 
+    return _IcalzeroI(q2, H0val, Hpmval, H0tval, HSval, Htval)
+
+
+@jit(nopython=True)
+def _IcalzeroI(q2, H0val, Hpmval, H0tval, HSval, Htval):
+
     return -np.sqrt(q2) * np.conjugate(H0val) * (
-        inputs["mtau"] * Htval + np.sqrt(q2) * HSval
-    ) - 2j * inputs["mtau"] * np.conjugate(Hpmval + H0tval) * (
-        inputs["mtau"] * Htval + np.sqrt(q2) * HSval
+        mtau * Htval + np.sqrt(q2) * HSval
+    ) - 2j * mtau * np.conjugate(Hpmval + H0tval) * (
+        mtau * Htval + np.sqrt(q2) * HSval
     )
 
 
@@ -177,7 +196,7 @@ def Gamma00p(w: Wilson, q2, El):
 
     return (
         np.absolute(
-            2j * np.sqrt(q2) * (Hpmval + H0tval) - inputs["mtau"] * H0val
+            2j * np.sqrt(q2) * (Hpmval + H0tval) - mtau * H0val
         )
         ** 2
     )
@@ -190,7 +209,7 @@ def Gammat0p(w: Wilson, q2, El):
     HSval = HS(w, q2, El)
     Htval = Ht(w, q2, El)
 
-    return np.absolute(inputs["mtau"] * Htval + np.sqrt(q2) * HSval) ** 2
+    return np.absolute(mtau * Htval + np.sqrt(q2) * HSval) ** 2
 
 
 def GammaI0p(w: Wilson, q2, El):
@@ -201,8 +220,8 @@ def GammaI0p(w: Wilson, q2, El):
     Htval = Ht(w, q2, El)
 
     return 2 * np.real(
-        (2j * np.sqrt(q2) * (Hpmval + H0tval) - inputs["mtau"] * H0val)
-        * np.conjugate(inputs["mtau"] * Htval + np.sqrt(q2) * HSval)
+        (2j * np.sqrt(q2) * (Hpmval + H0tval) - mtau * H0val)
+        * np.conjugate(mtau * Htval + np.sqrt(q2) * HSval)
     )
 
 
@@ -220,7 +239,7 @@ def Gamma0m(w: Wilson, q2, El):
 
     return (
         np.absolute(
-            np.sqrt(q2) * H0val - 2j * inputs["mtau"] * (Hpmval + H0tval)
+            np.sqrt(q2) * H0val - 2j * mtau * (Hpmval + H0tval)
         )
         ** 2
     )

@@ -6,6 +6,7 @@ from numpy import sqrt, pi, cos
 
 # 3rd
 from wilson.run.smeft.smpar import p
+from numba import jit
 
 # ours
 from clusterking_physics.models.bdlnu.amplitude import *
@@ -61,6 +62,12 @@ def I0w1(w: Wilson, q2, El):
 
     Ical1val = Ical1(w, q2, El)
 
+    return _I0w1(x, y, Gammap0val, Gammam0val, Gammam2val, Gammap2val, Ical1val)
+
+
+@jit(nopython=True)
+def _I0w1(x, y, Gammap0val, Gammam0val, Gammam2val,Gammap2val, Ical1val):
+
     return (
         ((3 * x ** 2 - 2) * (x + 4 * y) * (x - 2 * y) ** 2)
         / (6 * x ** 2 * (x ** 2 - 1) ** 2 * y ** 2)
@@ -111,6 +118,11 @@ def I1w1(w: Wilson, q2, El):
 
     Ical0val = Ical0(w, q2, El)
 
+    return _I1w1(x, y, Gammap1val, Gammam1val, Ical0val)
+
+
+@jit(nopython=True)
+def _I1w1(x, y, Gammap1val, Gammam1val, Ical0val):
     return (
         (
             -2 * x ** 4
@@ -154,6 +166,10 @@ def I2w1(w: Wilson, q2, El):
 
     Ical1val = Ical1(w, q2, El)
 
+    return _I2w1(x, y, Gammap2val, Gammam2val, Ical1val)
+
+
+def _I2w1(x, y, Gammap2val, Gammam2val, Ical1val):
     return (
         1
         / (120 * (x ** 2 - 1) ** 4 * y ** 4)
@@ -199,6 +215,11 @@ def I0w2(w: Wilson, q2, El):
     #  Ical0val = Ical0(w, q2, El)
     Ical1val = Ical1(w, q2, El)
 
+    return _I0w2(x, y, Gammap0val, Gammam0val, Gammap2val, Gammam2val, Ical1val)
+
+
+@jit(nopython=True)
+def _I0w2(x, y, Gammap0val, Gammam0val, Gammap2val, Gammam2val, Ical1val):
     return (
         -2 * (2 * x ** 2 + 1) * (4 * x * y - 3) / (3 * x) * Gammam0val
         + 2 * (x ** 2 + 2) * (3 * x - 4 * y) / (3 * x ** 2) * Gammap0val
