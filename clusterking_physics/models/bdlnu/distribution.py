@@ -412,16 +412,25 @@ def dGcthetal(w: Wilson, cthetal):
     ]
 
 
-def dGcthetal_vs_tanbm(tanbm, cthetal):
-    """ 1D cthetal distribution vs tan(beta)/mH for investigating 2HDMs """
+def tanbm_to_wilson(tanbm):
     v = sqrt(1 / (sqrt(2) * p['GF']))
     Yb = 4.2 / v
     Ytau = 1.776 / v
-    w = Wilson(
+    return Wilson(
         wcdict={"CSR_bctaunutau": -sqrt(2)*Yb*Ytau / 4 / p['GF'] * tanbm**2},
         scale=5, eft='WET', basis='flavio'
     )
-    return dGcthetal(w, cthetal)
+
+
+def dGcthetal_vs_tanbm(tanbm, cthetal):
+    """ 1D cthetal distribution vs tan(beta)/mH for investigating 2HDMs """
+
+    return dGcthetal(tanbm_to_wilson(tanbm), cthetal)
+
+
+def dGEl_vs_tanbm(tanbm, El):
+    """ 1D El distribution vs tan(beta)/mH for investigating 2HDMs """
+    return dGEl(tanbm_to_wilson(tanbm), El)
 
 
 def dGcthetalnorm(w: Wilson, cthetal):
