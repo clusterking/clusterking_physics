@@ -28,10 +28,6 @@ __pycache__/
 build/**
 dist/**
 *.egg-info/**
-clusterking/git_info.json
 .coverage
+pip-wheel-metadata/**
 
-# MISC
-# ====
-
-examples/jupyter_notebooks/test/test_auto_generated_tests/**
