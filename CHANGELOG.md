@@ -13,5 +13,5 @@ Fix problems with import paths
 
 ## 0.1.0 2019-05-30
 
-Initial version based on commit ``e2bed636f0920823498c5425e25865536278b0da`` (v10.0.0) of the ClusterKinG package. 
+Initial version based on commit ``e2bed636f0920823498c5425e25865536278b0da`` (v10.0.0) of the ClusterKinG package.
 Previous development was part of the ClusterKinG package.

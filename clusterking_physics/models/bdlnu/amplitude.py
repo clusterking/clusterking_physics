@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # std
 import numpy as np
 from functools import lru_cache as cache
@@ -35,13 +33,10 @@ def Klambda(a, b, c):
 
 # Improves speed and allows us to compile more
 
+
 @jit(nopython=True)
 def kvec(q2):
-    return (
-        1
-        / (2 * mB)
-        * np.sqrt(Klambda(mB ** 2, mD ** 2, q2))
-    )
+    return 1 / (2 * mB) * np.sqrt(Klambda(mB ** 2, mD ** 2, q2))
 
 
 ##  23
@@ -74,11 +69,7 @@ def ct_bctaunutau(w):
 
 def H0(w: Wilson, q2, El):
     return (
-        (
-            1
-            + cvl_bctaunutau(w)
-            + cvr_bctaunutau(w)
-        )
+        (1 + cvl_bctaunutau(w) + cvr_bctaunutau(w))
         * 2
         * mB
         * kvec(q2)
@@ -89,11 +80,7 @@ def H0(w: Wilson, q2, El):
 
 def Ht(w: Wilson, q2, El):
     return (
-        (
-            1
-            + cvl_bctaunutau(w)
-            + cvr_bctaunutau(w)
-        )
+        (1 + cvl_bctaunutau(w) + cvr_bctaunutau(w))
         * (mB ** 2 - mD ** 2)
         / (np.sqrt(q2))
         * fzero(q2)
@@ -102,10 +89,7 @@ def Ht(w: Wilson, q2, El):
 
 def HS(w: Wilson, q2, El):
     return (
-        (
-            csr_bctaunutau(w)
-            + csl_bctaunutau(w)
-        )
+        (csr_bctaunutau(w) + csl_bctaunutau(w))
         * (mB ** 2 - mD ** 2)
         / (mb - mc)
         * fzero(q2)
@@ -116,24 +100,14 @@ def HS(w: Wilson, q2, El):
 
 
 def Hpm(w: Wilson, q2, El):
-    return (
-        ct_bctaunutau(w)
-        * (2j * mB * kvec(q2))
-        / (mB + mD)
-        * fT(q2)
-    )
+    return ct_bctaunutau(w) * (2j * mB * kvec(q2)) / (mB + mD) * fT(q2)
 
 
 ##
 
 
 def H0t(w: Wilson, q2, El):
-    return (
-        ct_bctaunutau(w)
-        * (2j * mB * kvec(q2))
-        / (mB + mD)
-        * fT(q2)
-    )
+    return ct_bctaunutau(w) * (2j * mB * kvec(q2)) / (mB + mD) * fT(q2)
 
 
 #    32
@@ -190,12 +164,7 @@ def Gamma00p(w: Wilson, q2, El):
     H0tval = H0t(w, q2, El)
     # HSval = HS(w, q2, El)
 
-    return (
-        np.absolute(
-            2j * np.sqrt(q2) * (Hpmval + H0tval) - mtau * H0val
-        )
-        ** 2
-    )
+    return np.absolute(2j * np.sqrt(q2) * (Hpmval + H0tval) - mtau * H0val) ** 2
 
 
 def Gammat0p(w: Wilson, q2, El):
@@ -233,12 +202,7 @@ def Gamma0m(w: Wilson, q2, El):
     # HSval = HS(w, q2, El)
     # Htval = Ht(w, q2, El)
 
-    return (
-        np.absolute(
-            np.sqrt(q2) * H0val - 2j * mtau * (Hpmval + H0tval)
-        )
-        ** 2
-    )
+    return np.absolute(np.sqrt(q2) * H0val - 2j * mtau * (Hpmval + H0tval)) ** 2
 
 
 Gammapm = 0

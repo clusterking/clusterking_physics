@@ -30,4 +30,3 @@ dist/**
 *.egg-info/**
 .coverage
 pip-wheel-metadata/**
-

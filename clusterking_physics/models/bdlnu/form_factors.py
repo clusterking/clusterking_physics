@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # 3rd
 from flavio.physics.bdecays.formfactors.b_p import bcl
 from flavio.parameters import default_parameters

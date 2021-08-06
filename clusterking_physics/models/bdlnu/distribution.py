@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # std
 import scipy.integrate as integrate
 from numpy import sqrt, pi, cos
@@ -67,7 +65,7 @@ def I0w1(w: Wilson, q2, El) -> float:
 
 
 @jit(nopython=True)
-def _I0w1(x, y, Gammap0val, Gammam0val, Gammam2val,Gammap2val, Ical1val):
+def _I0w1(x, y, Gammap0val, Gammam0val, Gammam2val, Gammap2val, Ical1val):
 
     return (
         ((3 * x ** 2 - 2) * (x + 4 * y) * (x - 2 * y) ** 2)
@@ -243,6 +241,7 @@ def I1w2(w: Wilson, q2, El):
 
     return _I1w2(x, y, Gammap1val, Gammam1val, Ical0val)
 
+
 @jit(nopython=True)
 def _I1w2(x, y, Gammap1val, Gammam1val, Ical0val):
     return (
@@ -261,7 +260,7 @@ def I2w2(w: Wilson, q2, El) -> float:
 
     Ical1val = Ical1(w, q2, El)
 
-    return  _I2w2(x, y, Gammap2val, Gammam2val, Ical1val)
+    return _I2w2(x, y, Gammap2val, Gammam2val, Ical1val)
 
 
 @jit(nopython=True)
@@ -307,7 +306,7 @@ def I2(w: Wilson, q2, El):
 
 
 def dG(w: Wilson, q2, El, cthetal):
-    """3D diff. distribution over q2, El  and cos(thetal) """
+    """3D diff. distribution over q2, El  and cos(thetal)"""
     I0val = I0(w, q2, El)
     I1val = I1(w, q2, El)
     I2val = I2(w, q2, El)
@@ -358,14 +357,14 @@ def _dGq2El(q2, El, I0val, I2val):
 
 
 def dGq2(w: Wilson, q2):
-    """ 1D q2 distrubution, integrating El """
+    """1D q2 distrubution, integrating El"""
 
     return integrate.quad(lambda El: dGq2El(w, q2, El), Elmin, Elmax(q2))[0]
 
 
 @jit
 def dGq2norm(w: Wilson, q2):
-    """Normalized distribution 1D q2 """
+    """Normalized distribution 1D q2"""
 
     return tauBp / Btaul * dGq2(w, q2)
 
@@ -393,7 +392,7 @@ def dGEl(w: Wilson, El):
 
 
 def dGElnorm(w: Wilson, El):
-    """Normalized distribution 1D El """
+    """Normalized distribution 1D El"""
     return tauBp / Btaul * dGEl(w, El)
 
 
@@ -413,23 +412,27 @@ def dGcthetal(w: Wilson, cthetal):
 
 
 def tanbm_to_wilson(tanbm):
-    v = sqrt(1 / (sqrt(2) * p['GF']))
+    v = sqrt(1 / (sqrt(2) * p["GF"]))
     Yb = 4.2 / v
     Ytau = 1.776 / v
     return Wilson(
-        wcdict={"CSR_bctaunutau": -sqrt(2)*Yb*Ytau / 4 / p['GF'] * tanbm**2},
-        scale=5, eft='WET', basis='flavio'
+        wcdict={
+            "CSR_bctaunutau": -sqrt(2) * Yb * Ytau / 4 / p["GF"] * tanbm ** 2
+        },
+        scale=5,
+        eft="WET",
+        basis="flavio",
     )
 
 
 def dGcthetal_vs_tanbm(tanbm, cthetal):
-    """ 1D cthetal distribution vs tan(beta)/mH for investigating 2HDMs """
+    """1D cthetal distribution vs tan(beta)/mH for investigating 2HDMs"""
 
     return dGcthetal(tanbm_to_wilson(tanbm), cthetal)
 
 
 def dGEl_vs_tanbm(tanbm, El):
-    """ 1D El distribution vs tan(beta)/mH for investigating 2HDMs """
+    """1D El distribution vs tan(beta)/mH for investigating 2HDMs"""
     return dGEl(tanbm_to_wilson(tanbm), El)
 
 

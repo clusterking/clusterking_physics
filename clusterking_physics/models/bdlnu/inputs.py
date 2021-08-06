@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """ Input parameters/physical constants. """
 
 import flavio
