@@ -1,14 +1,20 @@
-#!/usr/bin/env python3
-
 # std
 from distutils.core import setup
+import sys
 
 # noinspection PyUnresolvedReferences
 import setuptools  # see below (1)
 from pathlib import Path
+import site
 
 # (1) see https://stackoverflow.com/questions/8295644/
 # Without this import, install_requires won't work.
+
+
+# Sometimes editable install fails with an error message about user site
+# being not writeable. The following line can fix that, see
+# https://github.com/pypa/pip/issues/7953
+site.ENABLE_USER_SITE = "--user" in sys.argv[1:]
 
 
 keywords = [
@@ -23,7 +29,7 @@ keywords = [
     "hep-ex",
     "hep-ph",
     "wilson",
-    "clusterking"
+    "clusterking",
 ]
 
 description = (
@@ -68,7 +74,6 @@ setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Topic :: Scientific/Engineering :: Physics"
+        "Topic :: Scientific/Engineering :: Physics",
     ],
 )
-
