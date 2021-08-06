@@ -19,6 +19,10 @@ Physics distributions for the ClusterKinG package
    :target: https://github.com/python/black
    :alt: Black
 
+.. |Pre-commit status| image:: https://results.pre-commit.ci/badge/github/clusterking/clusterking_physics/master.svg
+   :target: https://results.pre-commit.ci/latest/github/clusterking/clusterking_physics/master
+   :alt: Pre-commit status
+
 Description
 -----------
 
