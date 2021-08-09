@@ -15,3 +15,6 @@ repos:
     -   id: trailing-whitespace
     -   id: check-shebang-scripts-are-executable
     -   id: check-executables-have-shebangs
+
+ci:
+    autoupdate_schedule: monthly
