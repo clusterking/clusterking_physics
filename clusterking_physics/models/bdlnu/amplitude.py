@@ -28,7 +28,7 @@ from clusterking_physics.models.bdlnu.inputs import *
 def Klambda(a, b, c):
     # even though the formula is positive definite, use max to enforce this
     # even when rounding errors occurr (else problems with sqrt later)
-    return max(0, a ** 2 + b ** 2 + c ** 2 - 2 * (a * b + a * c + b * c))
+    return max(0, a**2 + b**2 + c**2 - 2 * (a * b + a * c + b * c))
 
 
 # Improves speed and allows us to compile more
@@ -36,7 +36,7 @@ def Klambda(a, b, c):
 
 @jit(nopython=True)
 def kvec(q2):
-    return 1 / (2 * mB) * np.sqrt(Klambda(mB ** 2, mD ** 2, q2))
+    return 1 / (2 * mB) * np.sqrt(Klambda(mB**2, mD**2, q2))
 
 
 ##  23
@@ -81,7 +81,7 @@ def H0(w: Wilson, q2, El):
 def Ht(w: Wilson, q2, El):
     return (
         (1 + cvl_bctaunutau(w) + cvr_bctaunutau(w))
-        * (mB ** 2 - mD ** 2)
+        * (mB**2 - mD**2)
         / (np.sqrt(q2))
         * fzero(q2)
     )
@@ -90,7 +90,7 @@ def Ht(w: Wilson, q2, El):
 def HS(w: Wilson, q2, El):
     return (
         (csr_bctaunutau(w) + csl_bctaunutau(w))
-        * (mB ** 2 - mD ** 2)
+        * (mB**2 - mD**2)
         / (mb - mc)
         * fzero(q2)
     )
@@ -126,7 +126,7 @@ def _Icalzero(q2, H0val, Hpmval, H0tval):
     return (
         mtau * np.sqrt(q2) * np.absolute(H0val) ** 2
         + 4 * mtau * np.sqrt(q2) * np.absolute(Hpmval + H0tval) ** 2
-        + 2j * mtau ** 2 * H0val * np.conjugate(Hpmval + H0tval)
+        + 2j * mtau**2 * H0val * np.conjugate(Hpmval + H0tval)
         - 2j * q2 * np.conjugate(H0val) * (Hpmval + H0tval)
     )
 
