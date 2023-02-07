@@ -143,7 +143,6 @@ def IcalzeroI(w: Wilson, q2, El):
 
 @jit(nopython=True)
 def _IcalzeroI(q2, H0val, Hpmval, H0tval, HSval, Htval):
-
     return -np.sqrt(q2) * np.conjugate(H0val) * (
         mtau * Htval + np.sqrt(q2) * HSval
     ) - 2j * mtau * np.conjugate(Hpmval + H0tval) * (

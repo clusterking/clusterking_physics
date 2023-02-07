@@ -66,7 +66,6 @@ def I0w1(w: Wilson, q2, El) -> float:
 
 @jit(nopython=True)
 def _I0w1(x, y, Gammap0val, Gammam0val, Gammam2val, Gammap2val, Ical1val):
-
     return (
         ((3 * x**2 - 2) * (x + 4 * y) * (x - 2 * y) ** 2)
         / (6 * x**2 * (x**2 - 1) ** 2 * y**2)
