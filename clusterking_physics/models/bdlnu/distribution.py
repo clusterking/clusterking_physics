@@ -143,12 +143,7 @@ def _I1w1(x, y, Gammap1val, Gammam1val, Ical0val):
         * Gammam1val
         - (
             (x - 2 * y) ** 2
-            * (
-                2 * x**3 * y
-                + x**2 * (8 * y**2 - 1)
-                - 2 * x * y
-                - 4 * y**2
-            )
+            * (2 * x**3 * y + x**2 * (8 * y**2 - 1) - 2 * x * y - 4 * y**2)
         )
         / (6 * x * (x**2 - 1) ** 3 * y**3)
         * Ical0val
