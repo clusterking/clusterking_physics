@@ -1,8 +1,7 @@
-""" Input parameters/physical constants. """
+"""Input parameters/physical constants."""
 
 import flavio
 from flavio.parameters import default_parameters as par
-
 
 # inputs now taken from flavio except for running quark masses #  (since
 # we just need them at one scale it is more efficient to write them directly)
